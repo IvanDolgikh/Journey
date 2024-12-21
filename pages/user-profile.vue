@@ -43,11 +43,11 @@
               type="file"
               class="visually-hidden"
               accept=".jpg, .png, .jpeg"
+              @change="changeAvatar"
             >
             <span class="pi pi-camera"></span>
             </input>
           </label>
-
         </div>
 
         <p class="user-profile__name">{{ dataUser.name }}</p>
@@ -94,21 +94,10 @@
             :value="dataUser.email"
           />
         </label>
-
-        <!-- <label
-          class="user-profile__label"
-          :class="{ 'user-profile__label--filled': dataUser.password ? 'user-profile__label--filled' : '' }"
-        >
-          <span>Пароль</span>
-          <InputText
-            id="password"
-            type="password"
-            v-model="dataUser.password"
-            :value="dataUser.password"
-          />
-        </label> -->
-
-        <button class="user-profile__button-send">Сохранить изменения</button>
+        <button
+          class="user-profile__button-send"
+          @click.prevent="changeData"
+        >Сохранить изменения</button>
       </form>
     </div>
   </section>
@@ -127,6 +116,44 @@ const dataUser = reactive<IDataProfile>({
   email: '',
   avatarUrl: ''
 })
+
+const changeAvatar = async (event: any) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      console.log(reader.result)
+      dataUser.avatarUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+  console.log(dataUser.avatarUrl)
+};
+
+
+const changeData = async () => {
+  const url = `${baseUrl}/authentication/profile`
+  const formData = new FormData()
+  const keys = Object.keys(dataUser) as (keyof IDataProfile)[];
+
+  keys.forEach(key => {
+    formData.append(key, dataUser[key]);
+  });
+
+  try {
+    await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      },
+      body: formData
+    }
+    )
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 onMounted(async () => {
   const url = `${baseUrl}/authentication/profile`
@@ -185,19 +212,29 @@ onMounted(async () => {
   }
 
   &__image-container {
+    width: 120px;
+    height: 120px;
+
     position: relative;
     grid-column: 1;
     grid-row: 1 / 3;
+
+    img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
   }
 
   &__spare-image {
-    width: 120px;
-    height: 120px;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: rgba(117, 117, 117, 0.6);
-    border-radius: 50%;
 
     span {
       font-size: 30px;

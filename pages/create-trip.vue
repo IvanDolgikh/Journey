@@ -107,20 +107,20 @@ const router = useRouter()
 
 const selectedCities = ref();
 const cities = ref([
-  { name: 'New York', code: 'NY' },
-  { name: 'Rome', code: 'RM' },
-  { name: 'London', code: 'LDN' },
-  { name: 'Istanbul', code: 'IST' },
-  { name: 'Paris', code: 'PRS' }
+  { name: 'Рим', code: 'RM' },
+  { name: 'Лондон', code: 'LDN' },
+  { name: 'Стамбул', code: 'IST' },
+  { name: 'Париж', code: 'PRS' },
+  { name: 'Сидней', code: 'SDN' }
 ]);
 
 const style = ref()
 const styles = ref([
-  { name: 'Religious travel' },
-  { name: 'Sports travel' },
-  { name: 'Group travel' },
-  { name: 'Relaxaction' },
-  { name: 'Luxury' }
+  { name: 'Религиозное путешествие' },
+  { name: 'Спортивное путешествие' },
+  { name: 'Груповое путешествие' },
+  { name: 'Премимум' },
+  { name: 'Люкс' }
 ])
 
 const date = ref<string>('')

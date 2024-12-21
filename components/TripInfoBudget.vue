@@ -18,7 +18,7 @@
         alt=""
       >
 
-      <p class="trip-budget__price"><span>$</span>400</p>
+      <p class="trip-budget__price"><span>$</span>{{ price }}</p>
       <p class="trip-budget__description">На весь тур</p>
 
     </div>
@@ -29,6 +29,10 @@
   setup
   lang="ts"
 >
+
+const props = defineProps<{
+  price: number
+}>()
 </script>
 
 
@@ -81,7 +85,7 @@
     left: 0;
     right: 0;
     text-align: center;
-    font-size: 72px;
+    font-size: 54px;
     font-weight: 500;
     color: rgba(34, 38, 41, 1);
 

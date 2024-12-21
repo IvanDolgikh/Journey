@@ -4,7 +4,7 @@
     <Promo />
     <Features />
     <AiTrip />
-    <Reviews />
+    <!-- <Reviews /> -->
     <TravelPackage />
     <PopularTrip />
   </div>

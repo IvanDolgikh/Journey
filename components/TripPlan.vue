@@ -7,10 +7,10 @@
         <ul class="trip-plan__nav-list">
           <li
             class="trip-plan__nav-item"
-            v-for="(item, index) in amount"
+            v-for="(item, index) in props.data.sort((a, b) => a.day - b.day)"
             :key="index"
           >
-            <a :href="`#${item}`">{{ item }}</a>
+            <a :href="`#${item.day}`">{{ item.day }}</a>
           </li>
         </ul>
       </nav>
@@ -18,17 +18,17 @@
       <ul class="trip-plan__list">
         <li
           class="trip-plan__item"
-          v-for="(item, index) in amount"
+          v-for="(item, index) in props.data"
           :key="index"
-          :id="`${item}`"
+          :id="`${item.day}`"
         >
           <div class="trip-plan__item-details-container">
-            <p class="trip-plan__item-days">{{ index + 1 }} день</p>
+            <p class="trip-plan__item-days">{{ item.day }} день</p>
             <div></div>
-            <p class="trip-plan__item-price">Стоимость: около <span>11</span>$</p>
+            <p class="trip-plan__item-price">Стоимость: около <span>{{ item.places[0]?.price }}</span>$</p>
             <button
               class="trip-plan__button-up"
-              v-if="index === amount.length - 1"
+              v-if="index === props.data.length - 1"
               @click="goUp"
             >
               <svg
@@ -50,12 +50,8 @@
           </div>
 
           <div class="trip-plan__item-info-container">
-            <h3 class="trip-plan__item-title">Эйфелева башня </h3>
-            <p class="trip-plan__item-description">Эйфелева башня&nbsp;&mdash; символ Парижа и&nbsp;одна из&nbsp;самых
-              известных достопримечательностей
-              в&nbsp;мире. Башня была построена в&nbsp;1889 году к&nbsp;Всемирной выставке. Со&nbsp;смотровой площадки
-              на&nbsp;первом и&nbsp;втором уровнях башни открывается потрясающий вид на&nbsp;город, особенно
-              в&nbsp;вечернее время
+            <h3 class="trip-plan__item-title">{{ item.places[0]?.title }}</h3>
+            <p class="trip-plan__item-description">{{ item.places[0]?.description }}
             </p>
             <img
               class="trip-plan__item-image"
@@ -85,8 +81,11 @@
   setup
   lang="ts"
 >
+import type { ITripDays } from '@/types/trips'
 
-const amount: number[] = [1, 2, 3, 4, 5]
+const props = defineProps<{
+  data: ITripDays[]
+}>()
 
 const goUp = (): void => {
   window.scrollTo({
@@ -94,7 +93,6 @@ const goUp = (): void => {
     behavior: 'smooth'
   });
 }
-
 </script>
 
 <style
@@ -140,6 +138,7 @@ const goUp = (): void => {
   }
 
   &__item {
+    position: relative;
     display: grid;
     grid-template-columns: max-content 1fr;
     column-gap: 66px;
@@ -203,7 +202,9 @@ const goUp = (): void => {
     border-radius: 50%;
     border: 1px solid var(--color-accent);
     background-color: transparent;
-    margin-left: -70px;
+    position: absolute;
+    bottom: 0;
+    left: -70px;
     cursor: pointer;
   }
 

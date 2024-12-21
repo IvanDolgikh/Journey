@@ -5,18 +5,18 @@
   >
     <div class="comment-form__overlay">
       <div class="comment-form__container">
-        <p class="comment-form__city">Париж</p>
+        <p class="comment-form__city">{{ data.city }}</p>
         <div class="comment-form__location">
           <img
             src="../public/icons/map-pin.svg"
             alt=""
           >
-          <p>Франция</p>
+          <p>{{ data.country }}</p>
         </div>
 
         <Rating
           class="comment-form__rating"
-          v-model="rating"
+          v-model="commentData.rating"
         />
 
         <label class="comment-form__label">
@@ -24,7 +24,7 @@
           <input
             type="text"
             class="comment-form__input"
-            v-model="textComment"
+            v-model="commentData.comment"
             placeholder="Поделитесь своим впечатлением"
           >
         </label>
@@ -37,7 +37,7 @@
           <button
             @click="sendComment"
             class="comment-form__button-send"
-            :disabled="rating < 1"
+            :disabled="commentData.rating < 1"
           >Опубликовать</button>
 
         </div>
@@ -52,11 +52,19 @@
   setup
   lang="ts"
 >
+import { baseUrl } from '@/api/api'
+import type { ITripsList } from '@/types/trips'
+import type { IComment } from '@/types/comment'
 
+const props = defineProps<{
+  data: ITripsList
+}>()
 const emit = defineEmits(['closeModal'])
 
-const rating = ref<number>(0)
-const textComment = ref<string>('')
+const commentData = reactive<IComment>({
+  rating: 0,
+  comment: ''
+})
 
 const closeModal = (evt: Event) => {
   const target = evt.target;
@@ -66,12 +74,25 @@ const closeModal = (evt: Event) => {
 }
 
 const clearData = () => {
-  rating.value = 0
-  textComment.value = ''
+  commentData.rating = 0
+  commentData.comment = ''
 }
 
-const sendComment = () => {
-  console.log('Отправил')
+const sendComment = async () => {
+  const url = `${baseUrl}/trips/${props.data.id}/reviews`
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      },
+      body: JSON.stringify(commentData)
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 

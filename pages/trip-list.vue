@@ -27,13 +27,13 @@
         </button>
 
         <TripListSort
-          v-if="isSortOpen"
+          v-if="isSortOpen && tripsStore.trips"
           class="trips__filter"
-          :data="dataList"
+          :data="tripsStore.trips"
           @update-data="updateData"
         />
 
-        <p class="trips__findings">Найдено {{ dataList.length }} туров</p>
+        <p class="trips__findings">Найдено {{ data?.length }} туров</p>
 
         <button
           class="trips__button-filter"
@@ -53,12 +53,16 @@
       <ul class="trips__list">
         <li
           class="trips__item"
-          v-for="(item, index) in dataList"
+          v-for="(item, index) in data"
           :key="index"
+          :style="{
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url(${item.imageUrl})`,
+            backgroundSize: 'cover'
+          }"
         >
           <nuxt-link
             class="trips__link-container"
-            to="/trip"
+            :to="{ name: 'trip-id', params: { id: item.id } }"
           >
 
             <div class="trips__item-title-container">
@@ -90,16 +94,16 @@
                   width="12"
                   height="12"
                 >
-                <span>{{ item.rating }}/5</span>
+                <span>{{ parseFloat(item.averageRating.toFixed(1)) }}/5</span>
               </p>
             </div>
 
-            <div class="trips__list-tags">
+            <!-- <div class="trips__list-tags">
               <span
                 v-for="(tag, index) in item.tags"
                 :key="index"
               >{{ tag }}</span>
-            </div>
+            </div> -->
           </nuxt-link>
         </li>
       </ul>
@@ -123,40 +127,26 @@ import { ref } from 'vue'
 import { getData, baseUrl } from '@/api/api'
 import type { ITripsList } from '@/types/trips'
 
-interface ICityData {
-  city: string;
-  country: string;
-  price: number;
-  rating: number;
-  tags: string[];
-}
+const tripsStore = useTripsStore()
 
 const isFilterOpen = ref<boolean>(false)
 const isSortOpen = ref<boolean>(false)
+const data = ref<ITripsList[]>()
 
-const dataList = ref([
-  { city: 'Париж', country: 'Франция', price: 100, rating: 4.3, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { city: 'Париж', country: 'Франция', price: 125, rating: 4.4, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { city: 'Париж', country: 'Франция', price: 345, rating: 4.4, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { city: 'Париж', country: 'Франция', price: 233, rating: 4.8, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { city: 'Париж', country: 'Франция', price: 899, rating: 4.3, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { city: 'Париж', country: 'Франция', price: 766, rating: 4.1, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { city: 'Париж', country: 'Франция', price: 450, rating: 4.2, tags: ['Romantic', 'Cultura', 'Luxary'] }
-])
-
-const updateData = (data: ICityData[]) => {
+const updateData = (data: ITripsList[]) => {
   return data
 }
 
 const getTrips = async () => {
-  const url = `${baseUrl}/trips?Page=${Number(1)}&PageSize=${Number(10)}`
-  const data: ITripsList = await getData(url)
+  const url = `${baseUrl}/trips?Page=${Number(1)}&PageSize=${Number(12)}`
+  const data: ITripsList[] = await getData(url)
   return data
 }
 
 onMounted(async () => {
-  const data = await getTrips()
-  console.log(data)
+  tripsStore.trips = await getTrips()
+  data.value = tripsStore.trips
+  console.log(data.value)
 })
 
 </script>

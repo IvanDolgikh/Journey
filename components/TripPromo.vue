@@ -1,5 +1,12 @@
 <template>
-  <section class="trip-promo">
+  <section
+    class="trip-promo"
+    :style="{
+      background: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${data.imageUrl})`,
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+    }"
+  >
     <div class="trip-promo__container">
       <nuxt-link
         class="trip-promo__link-back"
@@ -23,12 +30,11 @@
       </nuxt-link>
 
       <div class="trip-promo__title-container">
-        <h2 class="trip-promo__title">Париж</h2>
-        <p class="trip-promo__description">Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и
-          культурным наследием.</p>
+        <h2 class="trip-promo__title">{{ data.city }}</h2>
+        <p class="trip-promo__description">{{ data.description }}</p>
       </div>
 
-      <ul class="trip-promo__list-images">
+      <!-- <ul class="trip-promo__list-images">
         <li
           class="trip-promo__item-images"
           v-for="(item, index) in 5"
@@ -41,7 +47,7 @@
             >
           </button>
         </li>
-      </ul>
+      </ul> -->
 
       <div class="trip-promo__details-container">
         <div class="trip-promo__details">
@@ -93,6 +99,7 @@
         <transition>
           <TripCommentForm
             v-if="isOpenCommentForm"
+            :data="data"
             @close-modal="isOpenCommentForm = !isOpenCommentForm"
           />
         </transition>
@@ -107,14 +114,16 @@
   setup
   lang="ts"
 >
+import type { ITripsList } from '@/types/trips'
+
+const props = defineProps<{
+  data: ITripsList
+  isActiveTab: Boolean,
+}>()
+const emit = defineEmits(['switchTabs'])
 
 const isOpenCommentForm = ref<boolean>(false)
 
-const props = defineProps({
-  isActiveTab: Boolean,
-})
-
-const emit = defineEmits(['switchTabs'])
 </script>
 
 <style
@@ -122,9 +131,8 @@ const emit = defineEmits(['switchTabs'])
   lang="scss"
 >
 .trip-promo {
-
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../public/images/luvr-bg.png);
   background-size: cover;
+  background-repeat: no-repeat;
 
   &__container {
 

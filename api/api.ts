@@ -43,6 +43,7 @@ const getData = async <T>(url: string): Promise<T> => {
       throw new Error(errorData.errors);
     }
   } catch (error: any) {
+    console.log(error)
     throw error;
   }
 }

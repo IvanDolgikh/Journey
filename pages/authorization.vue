@@ -93,6 +93,7 @@ const signIn = async () => {
   const response = await sendData(url, data)
   if (response.token) {
     localStorage.setItem('token', response.token)
+    localStorage.setItem('isAuthUser', 'true')
     authStore.isAuthUser = true
   }
   router.push('/')

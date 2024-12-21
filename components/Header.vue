@@ -22,7 +22,26 @@
       </nav>
 
       <div
-        v-if="!authStore.isAuthUser"
+        v-if="authStore.isAuthUser || isAuthUser"
+        class="main-header__lk-container"
+      >
+        <div class="main-header__image-container">
+          <!-- <img src="" alt=""> -->
+          <div class="main-header__image-spare">
+            <span class="pi pi-user"></span>
+          </div>
+        </div>
+
+        <NuxtLink
+          class="main-header__lk-button"
+          to="/user-profile"
+        >
+          <span class="pi pi-bars"></span>
+        </NuxtLink>
+      </div>
+
+      <div
+        v-else
         class="main-header__authentication"
       >
         <ul class="main-header__authentication-list">
@@ -41,24 +60,7 @@
         </ul>
       </div>
 
-      <div
-        v-else
-        class="main-header__lk-container"
-      >
-        <div class="main-header__image-container">
-          <!-- <img src="" alt=""> -->
-          <div class="main-header__image-spare">
-            <span class="pi pi-user"></span>
-          </div>
-        </div>
 
-        <NuxtLink
-          class="main-header__lk-button"
-          to="/user-profile"
-        >
-          <span class="pi pi-bars"></span>
-        </NuxtLink>
-      </div>
 
     </div>
 
@@ -71,6 +73,15 @@
 >
 const authStore = useAuthStore()
 
+const isAuthUser = computed(() => {
+  if (localStorage.getItem('isAuthUser')) {
+    return localStorage.getItem('isAuthUser') === 'true' ? true : false
+  }
+})
+
+onMounted(() => {
+  console.log(isAuthUser.value)
+})
 </script>
 
 <style

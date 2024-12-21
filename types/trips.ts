@@ -2,15 +2,17 @@ export interface ITripsList {
   id: string,
   city: string,
   country: string,
+  description: string,
   price: number,
   startDate: string,
   endDate: string,
+  imageUrl: string,
   averageRating: number,
   days: ITripDays[],
   reviews: ITripReviews[]
 }
 
-interface ITripDays {
+export interface ITripDays {
   id: string,
   day: number,
   city: string,

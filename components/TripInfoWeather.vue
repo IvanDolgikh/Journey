@@ -30,7 +30,10 @@
   setup
   lang="ts"
 >
-const city: string = 'London'
+
+const props = defineProps<{
+  city: string
+}>()
 
 const apiKey: string = '4fa846e5e7f1495d817173857230611'
 
@@ -40,21 +43,10 @@ interface WeatherData {
   };
 }
 
-const { data } = await useFetch<WeatherData>(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`, {
+const { data } = await useFetch<WeatherData>(`https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${props.city}`, {
   pick: ['current'],
   method: 'get',
 })
-
-console.log(
-  'aaaaaa'
-)
-
-
-onMounted(() => {
-  if (data.value) {
-    console.log(data.value.current);
-  }
-});
 </script>
 
 <style

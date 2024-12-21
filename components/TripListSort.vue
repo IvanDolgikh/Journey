@@ -59,38 +59,31 @@
   setup
   lang="ts"
 >
-
-interface ICityData {
-  city: string;
-  country: string;
-  price: number;
-  rating: number;
-  tags: string[];
-}
+import type { ITripsList } from '@/types/trips'
 
 const props = defineProps<{
-  data: ICityData[]
+  data: ITripsList[]
 }>()
 
 const emit = defineEmits(['update-data'])
 
 const filter = ref<string>('')
 
-const sortCheapTrips = (): ICityData[] => {
+const sortCheapTrips = (): ITripsList[] => {
   return props.data.sort((a, b) => {
     return a.price - b.price
   })
 }
 
-const sortExpensiveTrips = (): ICityData[] => {
+const sortExpensiveTrips = (): ITripsList[] => {
   return props.data.sort((a, b) => {
     return b.price - a.price
   })
 }
 
-const sortBestGradeTrips = (): ICityData[] => {
+const sortBestGradeTrips = (): ITripsList[] => {
   return props.data.sort((a, b) => {
-    return b.rating - a.rating
+    return b.averageRating - a.averageRating
   })
 }
 

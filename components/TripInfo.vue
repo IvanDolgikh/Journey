@@ -1,16 +1,19 @@
 <template>
   <div class="trip-info">
-    <div class="trip-info__container">
+    <div
+      class="trip-info__container"
+      v-if="data"
+    >
       <h2 class="visually-hidden">Общая информация</h2>
 
       <div class="trip-info__layout">
         <TripInfoChat class="trip-info__chat" />
 
-        <TripInfoWeather />
+        <TripInfoWeather :city="data.city" />
 
-        <TripInfoBudget />
+        <TripInfoBudget :price="data.price" />
 
-        <TripInfoAssessment />
+        <TripInfoAssessment :rating="data.averageRating" />
 
         <div class="trip-info__map-container">
           <TripInfoMap class="trip-info__map" />
@@ -40,7 +43,7 @@
           :centeredSlides="true"
         >
           <SwiperSlide
-            v-for="(item, index) in dataSlider"
+            v-for="(item, index) in data.reviews"
             :key="index"
           >
             <div class="trip-info__card">
@@ -52,12 +55,19 @@
               <p class="trip-info__card-review">{{ item.reviewText }}</p>
               <div class="trip-info__person-info-container">
                 <img
+                  v-if="item.userAvatarUrl"
                   class="trip-info__person-image"
-                  src="../public/images/moc-person-review.png"
-                  :alt="item.name"
+                  :src="item.userAvatarUrl"
+                  :alt="`${item.userName} ${item.userSurname}`"
                 >
-                <p class="trip-info__person-name">{{ item.name }}</p>
-                <p class="trip-info__review-date">{{ item.reviewDate }}</p>
+                <div
+                  v-else
+                  class="trip-info__spare-image"
+                >
+                  <span class="pi pi-user"></span>
+                </div>
+                <p class="trip-info__person-name">{{ `${item.userName} ${item.userSurname}` }}</p>
+                <p class="trip-info__review-date">{{ item.date }}</p>
               </div>
             </div>
           </SwiperSlide>
@@ -78,15 +88,14 @@
   setup
   lang="ts"
 >
+
+import type { ITripsList } from '@/types/trips'
+
+const props = defineProps<{
+  data: ITripsList
+}>()
+
 const rating = ref<number>(3)
-const dataSlider = ref([
-  { rating: 2, image: '../public/images/moc-person-review.png', reviewText: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', name: 'Виктория Костина', reviewDate: "24 октября" },
-  { rating: 3, image: '../public/images/moc-person-review.png', reviewText: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', name: 'Виктория Костина', reviewDate: "24 октября" },
-  { rating: 5, image: '../public/images/moc-person-review.png', reviewText: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', name: 'Виктория Костина', reviewDate: "24 октября" },
-  { rating: 3, image: '../public/images/moc-person-review.png', reviewText: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', name: 'Виктория Костина', reviewDate: "24 октября" },
-  { rating: 4, image: '../public/images/moc-person-review.png', reviewText: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', name: 'Виктория Костина', reviewDate: "24 октября" },
-  { rating: 1, image: '../public/images/moc-person-review.png', reviewText: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', name: 'Виктория Костина', reviewDate: "24 октября" }
-])
 </script>
 
 <style lang="scss">
@@ -171,11 +180,23 @@ const dataSlider = ref([
     column-gap: 16px;
   }
 
-  &__person-image {
+  &__person-image,
+  &__spare-image {
     grid-row: 1 / 3;
     width: 72px;
     height: 72px;
     border-radius: 50%;
+  }
+
+  &__spare-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(117, 117, 117, 0.6);
+
+    span {
+      font-size: 24px;
+    }
   }
 
   &__person-name {

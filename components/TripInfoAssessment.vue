@@ -11,7 +11,10 @@
         <p>Оценки пользователей</p>
       </div>
 
-      <div class="trip-assessment__assessment">
+      <div
+        class="trip-assessment__assessment"
+        v-if="rating !== 0"
+      >
         <div
           class="trip-assessment__item"
           :class="{ 'trip-assessment__1': determineRating(0, 1) }"
@@ -19,7 +22,7 @@
           <p
             class="trip-assessment__item-text"
             v-if="determineRating(0, 1)"
-          >{{ rating }}</p>
+          >{{ parseFloat(rating.toFixed(1)) }}</p>
         </div>
         <div
           class="trip-assessment__item"
@@ -28,7 +31,7 @@
           <p
             class="trip-assessment__item-text"
             v-if="determineRating(1, 2)"
-          >{{ rating }}</p>
+          >{{ parseFloat(rating.toFixed(1)) }}</p>
         </div>
         <div
           class="trip-assessment__item"
@@ -37,7 +40,7 @@
           <p
             class="trip-assessment__item-text"
             v-if="determineRating(2, 3)"
-          >{{ rating }}</p>
+          >{{ parseFloat(rating.toFixed(1)) }}</p>
         </div>
         <div
           class="trip-assessment__item"
@@ -46,7 +49,7 @@
           <p
             class="trip-assessment__item-text"
             v-if="determineRating(3, 4)"
-          >{{ rating }}</p>
+          >{{ parseFloat(rating.toFixed(1)) }}</p>
         </div>
         <div
           class="trip-assessment__item"
@@ -55,9 +58,14 @@
           <p
             class="trip-assessment__item-text"
             v-if="determineRating(4, 5)"
-          >{{ rating }}</p>
+          >{{ parseFloat(rating.toFixed(1)) }}</p>
         </div>
       </div>
+
+      <p
+        class="trip-assessment__item-text-error"
+        v-else
+      >Рейтинг отсутствует</p>
 
       <p class="trip-assessment__description">Рейтинг</p>
     </div>
@@ -68,13 +76,14 @@
   setup
   lang="ts"
 >
-
-const rating = 5
+const props = defineProps<{
+  rating: number
+}>()
 
 
 
 const determineRating = (min: number, max: number): boolean => {
-  return rating > min && rating <= max;
+  return props.rating > min && props.rating <= max;
 }
 </script>
 
@@ -216,6 +225,15 @@ const determineRating = (min: number, max: number): boolean => {
 
   .trip-assessment__5 .trip-assessment__item-text::after {
     background: rgba(9, 150, 96, 1);
+  }
+
+  &__item-text-error {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    color: var(--color-dark-secondary);
+    font-weight: 300;
   }
 
   &__description {
