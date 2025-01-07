@@ -3,13 +3,13 @@
     <YandexMap
       id="map"
       :coordinates="coordinate"
+      :zoom="12"
       :controls="controls"
       :detailed-controls="detailedControls"
     >
       <YandexMarker
-        :coordinates="item"
-        :marker-id="123"
-        v-for="(item, index) in coordinates"
+        :coordinates="coordinate"
+        :marker-id="1"
       >
         <!-- <template #component>
         <CustomBalloon v-model="name" />
@@ -24,10 +24,36 @@
   lang="ts"
 >
 import { YandexMap, YandexMarker } from 'vue-yandex-maps'
-const coordinate = [55, 33];
-const coordinates = [[55, 33], [57, 38], [56, 94]]
+
+const props = defineProps<{
+  city: string
+}>()
+
+const coordinate = ref<number[]>([]);
 const controls = ['fullscreenControl'];
 const detailedControls = { zoomControl: { position: { right: 10, top: 50 } } };
+
+
+
+const getCoordsForAddress = async () => {
+  const APIKEY: string = 'b9792c26-9b3a-42d8-a4f6-5160e8801ffc'
+  try {
+    const urlAddress: string = `https://geocode-maps.yandex.ru/1.x/?apikey=${APIKEY}&format=json&geocode=${props.city}`;
+
+    const response: any = await fetch(urlAddress)
+    if (response.ok) {
+      const data: any = await response.json()
+      const coordinates: string[] = data.response.GeoObjectCollection.featureMember[0].GeoObject.Point.pos.split(' ');
+      coordinate.value = [Number(coordinates[1]), Number(coordinates[0])]
+    }
+  } catch (error) {
+    console.log('Ошибка при получении координат по адресу:', props.city)
+  }
+}
+
+onMounted(async () => {
+  await getCoordsForAddress()
+})
 </script>
 
 <style

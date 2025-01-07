@@ -33,7 +33,7 @@
           @update-data="updateData"
         />
 
-        <p class="trips__findings">Найдено {{ data?.length }} туров</p>
+        <p class="trips__findings">Найдено {{ tripsStore.trips?.length }} туров</p>
 
         <button
           class="trips__button-filter"
@@ -43,6 +43,7 @@
         <Teleport to="body">
           <TripListFilter
             v-if="isFilterOpen"
+            @update-filter="updateFilter"
             @close-filter="isFilterOpen = !isFilterOpen"
           />
         </Teleport>
@@ -53,7 +54,7 @@
       <ul class="trips__list">
         <li
           class="trips__item"
-          v-for="(item, index) in data"
+          v-for="(item, index) in tripsStore.trips"
           :key="index"
           :style="{
             backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url(${item.imageUrl})`,
@@ -62,18 +63,29 @@
         >
           <nuxt-link
             class="trips__link-container"
+            event=""
             :to="{ name: 'trip-id', params: { id: item.id } }"
           >
 
             <div class="trips__item-title-container">
               <p>{{ item.city }}</p>
-              <button>
-                <img
-                  src="../public/icons/star.svg"
-                  alt=""
-                  width="17"
-                  height="17"
+              <button @click.prevent="saveFavorite(item.id, index)">
+                <svg
+                  class="trips__icon-favorite"
+                  :class="{ 'trips__icon-favorite--active': isFavorite[index] }"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
+                  <path
+                    d="M2.33496 10.3368C2.02171 10.0471 2.19187 9.52339 2.61557 9.47316L8.61914 8.76107C8.79182 8.74059 8.94181 8.63215 9.01465 8.47425L11.5469 2.98446C11.7256 2.59703 12.2764 2.59695 12.4551 2.98439L14.9873 8.47413C15.0601 8.63204 15.2092 8.74077 15.3818 8.76124L21.3857 9.47316C21.8094 9.52339 21.9791 10.0472 21.6659 10.3369L17.2278 14.4419C17.1001 14.56 17.0433 14.7357 17.0771 14.9063L18.255 20.8359C18.3382 21.2544 17.8928 21.5787 17.5205 21.3703L12.2451 18.4166C12.0934 18.3317 11.9091 18.3321 11.7573 18.417L6.48144 21.3695C6.10913 21.5779 5.66294 21.2544 5.74609 20.8359L6.92414 14.9066C6.95803 14.7361 6.90134 14.5599 6.77367 14.4419L2.33496 10.3368Z"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
               </button>
             </div>
 
@@ -88,12 +100,20 @@
             <div class="trips__item-details">
               <p>${{ item.price }}</p>
               <p>
-                <img
-                  src="../public/icons/star.svg"
-                  alt=""
-                  width="12"
-                  height="12"
+                <svg
+                  class="trips__icon-favorite"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
+                  <path
+                    d="M2.33496 10.3368C2.02171 10.0471 2.19187 9.52339 2.61557 9.47316L8.61914 8.76107C8.79182 8.74059 8.94181 8.63215 9.01465 8.47425L11.5469 2.98446C11.7256 2.59703 12.2764 2.59695 12.4551 2.98439L14.9873 8.47413C15.0601 8.63204 15.2092 8.74077 15.3818 8.76124L21.3857 9.47316C21.8094 9.52339 21.9791 10.0472 21.6659 10.3369L17.2278 14.4419C17.1001 14.56 17.0433 14.7357 17.0771 14.9063L18.255 20.8359C18.3382 21.2544 17.8928 21.5787 17.5205 21.3703L12.2451 18.4166C12.0934 18.3317 11.9091 18.3321 11.7573 18.417L6.48144 21.3695C6.10913 21.5779 5.66294 21.2544 5.74609 20.8359L6.92414 14.9066C6.95803 14.7361 6.90134 14.5599 6.77367 14.4419L2.33496 10.3368Z"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
                 <span>{{ parseFloat(item.averageRating.toFixed(1)) }}/5</span>
               </p>
             </div>
@@ -124,29 +144,34 @@
   lang="ts"
 >
 import { ref } from 'vue'
-import { getData, baseUrl } from '@/api/api'
+import { baseUrl, sendData } from '@/api/api'
 import type { ITripsList } from '@/types/trips'
 
 const tripsStore = useTripsStore()
 
 const isFilterOpen = ref<boolean>(false)
 const isSortOpen = ref<boolean>(false)
-const data = ref<ITripsList[]>()
+
+
+const isFavorite = ref<boolean[]>([]);
+
+const saveFavorite = async (id: string, index: number): Promise<void> => {
+  const url = `${baseUrl}/trips/${id}/favorites`
+  isFavorite.value[index] = !isFavorite.value[index]
+  await sendData(url, id)
+}
 
 const updateData = (data: ITripsList[]) => {
   return data
 }
 
-const getTrips = async () => {
-  const url = `${baseUrl}/trips?Page=${Number(1)}&PageSize=${Number(12)}`
-  const data: ITripsList[] = await getData(url)
+const updateFilter = (data: ITripsList[]) => {
+
   return data
 }
 
 onMounted(async () => {
-  tripsStore.trips = await getTrips()
-  data.value = tripsStore.trips
-  console.log(data.value)
+  isFavorite.value = Array(tripsStore.trips?.length).fill(false)
 })
 
 </script>
@@ -287,7 +312,17 @@ onMounted(async () => {
       background-color: rgba(242, 244, 254, 0.3);
       border-radius: 6px;
       border: none;
+      cursor: pointer;
     }
+  }
+
+  &__icon-favorite {
+    fill: none;
+    stroke: var(--color-light-secondary);
+  }
+
+  &__icon-favorite--active {
+    fill: var(--color-light-secondary);
   }
 
   &__item-location {
@@ -308,10 +343,6 @@ onMounted(async () => {
     column-gap: 6px;
     margin-bottom: 127px;
 
-    img {
-      margin-right: 6px;
-    }
-
     p {
       display: flex;
       align-items: center;
@@ -323,6 +354,10 @@ onMounted(async () => {
       padding: 3px 9px;
       line-height: 14px;
 
+    }
+
+    span {
+      margin-left: 6px;
     }
   }
 

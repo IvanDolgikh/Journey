@@ -79,9 +79,6 @@ const isAuthUser = computed(() => {
   }
 })
 
-onMounted(() => {
-  console.log(isAuthUser.value)
-})
 </script>
 
 <style

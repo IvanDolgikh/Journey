@@ -33,7 +33,10 @@
           <span>Выбрать все</span>
         </label>
 
-        <button class="favourites__button-delete">
+        <button
+          class="favourites__button-delete"
+          @click="removeTrip()"
+        >
           <span
             v-if="isSelectedItem"
             class="pi pi-trash"
@@ -44,7 +47,12 @@
       <ul class="favourites__list">
         <li
           class="favourites__item"
-          v-for="(item, index) in dataList"
+          :style="{
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url(${item.imageUrl})`,
+          backgroundSize: 'cover'
+        }"
+          v-for="(item, index) in data"
+          :key="index"
         >
           <Checkbox
             class="favourites__checkbox"
@@ -64,7 +72,7 @@
                     width="12"
                     height="12"
                   >
-                  <span>{{ item.rating }}/5</span>
+                  <span>{{ item.averageRating }}/5</span>
                 </p>
               </div>
             </div>
@@ -77,11 +85,11 @@
               <p>{{ item.country }}</p>
             </div>
 
-            <p class="favourites__description">{{ item.text }}</p>
+            <p class="favourites__description">{{ item.description }}</p>
 
-            <div class="favourites__list-tags">
+            <!-- <div class="favourites__list-tags">
               <span v-for="(tag, index) in item.tags">{{ tag }}</span>
-            </div>
+            </div> -->
           </label>
         </li>
       </ul>
@@ -94,38 +102,60 @@
   lang="ts"
 >
 
-interface ServerDataItem {
-  id: number;
-  city: string;
-  country: string;
-  text: string;
-  price: number;
-  rating: number;
-  tags: string[];
-  selected?: boolean;
-}
+import type { ITripsList } from '@/types/trips'
+import { getData, baseUrl } from '@/api/api'
 
-const dataList = ref<ServerDataItem[]>([
-  { id: 1, city: 'Париж', country: 'Франция', text: 'Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и культурным наследием.', price: 100, rating: 4.3, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { id: 2, city: 'Париж', country: 'Франция', text: 'Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и культурным наследием.', price: 125, rating: 4.4, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { id: 3, city: 'Париж', country: 'Франция', text: 'Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и культурным наследием.', price: 345, rating: 4.4, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { id: 4, city: 'Париж', country: 'Франция', text: 'Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и культурным наследием.', price: 233, rating: 4.8, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { id: 5, city: 'Париж', country: 'Франция', text: 'Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и культурным наследием.', price: 899, rating: 4.3, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { id: 6, city: 'Париж', country: 'Франция', text: 'Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и культурным наследием.', price: 766, rating: 4.1, tags: ['Romantic', 'Cultura', 'Luxary'] },
-  { id: 7, city: 'Париж', country: 'Франция', text: 'Cтолица Франции, известная своей богатой историей, архитектурными шедеврами и культурным наследием.', price: 450, rating: 4.2, tags: ['Romantic', 'Cultura', 'Luxary'] }
-])
-
-
+const data = ref<ITripsList[]>()
 const selectAll = ref<boolean>(false);
 
-const isSelectedItem = computed(() => dataList.value.some(item => item.selected))
+const isSelectedItem = computed(() => data.value?.some(item => item.selected))
 
 
 watch(selectAll, (newValue) => {
-  dataList.value.forEach(item => {
+  data.value?.forEach(item => {
     return item.selected = newValue
   });
 });
+
+const getFavorites = async (): Promise<ITripsList[]> => {
+  const url = `${baseUrl}/trips/favorites`
+  const data: ITripsList[] = await getData(url)
+  return data
+}
+
+
+const removeTrip = async () => {
+  const url: string = `${baseUrl}/trips/favorites`
+  let removeArr: string[] = []
+
+  if (data.value) {
+    removeArr = data.value.filter(item => {
+      if (item.selected) {
+        return item.id
+      }
+    }).map(item => item.id)
+  }
+
+  try {
+    await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(removeArr)
+    })
+
+    data.value = await getFavorites()
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(async () => {
+  data.value = await getFavorites()
+})
 </script>
 
 <style lang="scss">
@@ -133,7 +163,7 @@ watch(selectAll, (newValue) => {
   &__container {
     max-width: 1440px;
     width: 100%;
-    margin: 10% auto 0 auto;
+    margin: 10% auto 100px auto;
     padding: 0 96px;
   }
 
@@ -205,7 +235,7 @@ watch(selectAll, (newValue) => {
     column-gap: 12px;
     border-radius: 8px;
     max-width: 610px;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)), url('../public/images/moc-paris-list.png');
+    width: 100%;
     background-repeat: no-repeat;
     background-size: cover;
 
@@ -231,7 +261,7 @@ watch(selectAll, (newValue) => {
     display: flex;
     align-items: center;
     column-gap: 16px;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
   }
 
   &__item-city {
@@ -277,7 +307,7 @@ watch(selectAll, (newValue) => {
 
   &__description {
     grid-column: 2;
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 28px;
   }
 

@@ -66,7 +66,7 @@
               v-model="price"
               range
               :min="0"
-              :max="10000"
+              :max="100000"
               @change="updateInputNumbers"
             />
           </label>
@@ -89,7 +89,7 @@
           <button
             class="trip-filter__send-button"
             type="submit"
-            @click.prevent="sendData()"
+            @click.prevent="getTrips()"
           >
             <span>Продолжить</span>
             <img
@@ -109,30 +109,45 @@
   setup
   lang="ts"
 >
+import { getData, baseUrl } from '@/api/api'
 
-const emit = defineEmits(['close-filter'])
-const selectedCities = ref();
-const cities = ref([
-  { name: 'New York', code: 'NY' },
-  { name: 'Rome', code: 'RM' },
-  { name: 'London', code: 'LDN' },
-  { name: 'Istanbul', code: 'IST' },
-  { name: 'Paris', code: 'PRS' }
+const emit = defineEmits(['close-filter', 'update-filter'])
+
+const tripsStore = useTripsStore()
+
+interface ICity {
+  name: string,
+  code: string
+}
+const selectedCities = ref<ICity[]>([]);
+
+const cities = ref<ICity[]>([
+  { name: 'Сидней', code: '1' },
+  { name: 'Токио', code: '2' },
+  { name: 'Дубай', code: '3' },
+  { name: 'Рим', code: '4' },
+  { name: 'Санкт-Петербург', code: '5' },
+  { name: 'Сочи', code: '7' },
+  { name: 'Нью-Йорк', code: '8' },
+  { name: 'Казань', code: '9' },
+  { name: 'Париж', code: '10' },
+  { name: 'Лондон', code: '11' },
+  { name: 'Москва', code: '12' },
 ]);
 
 const style = ref()
 const styles = ref([
-  { name: 'Religious travel' },
-  { name: 'Sports travel' },
-  { name: 'Group travel' },
-  { name: 'Relaxaction' },
-  { name: 'Luxury' }
+  { name: 'Религиозное путешествие' },
+  { name: 'Спортивное путешествие' },
+  { name: 'Груповое путешествие' },
+  { name: 'Премимум' },
+  { name: 'Люкс' }
 ])
 
-const date = ref<string>('')
+const date = ref<any>([])
 const priceFrom = ref<number>(0)
-const priceTo = ref<number>(10000)
-const price = ref<number[]>([0, 10000]);
+const priceTo = ref<number>(100000)
+const price = ref<number[]>([0, 100000]);
 
 const updateInputNumbers = () => {
   // Обновляем значения InputNumber при изменении слайдера
@@ -140,8 +155,55 @@ const updateInputNumbers = () => {
   priceTo.value = price.value[1];
 };
 
-const sendData = () => {
-  console.log('aaa')
+const formatDate = (): string[] | string => {
+  if (date.value.length !== 0) {
+    const date1 = new Date(date.value[0]);
+    const date2 = new Date(date.value[1]);
+    const formattedDate: string = date1.toLocaleDateString('en-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).replace(/(\d{4})-(\d{2})-(\d{2})/, '$1-$2-$3');
+
+    const formattedDate1: string = date2.toLocaleDateString('en-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).replace(/(\d{4})-(\d{2})-(\d{2})/, '$1-$2-$3');
+
+    return [formattedDate, formattedDate1]
+  }
+
+  else {
+    return ''
+  }
+}
+
+const createUrl = (): string => {
+  let url = `${baseUrl}/trips?Page=${1}&PageSize=${11}`
+
+  if (selectedCities.value[0]?.name) {
+    url += `&City=${selectedCities.value[0]?.name}`
+  }
+
+  if (price.value) {
+    url += `&MinPrice=${price.value[0]}&MaxPrice=${price.value[1]}`
+  }
+
+  if (formatDate()) {
+    const [startDate, endDate] = formatDate();
+    url += `&StartDate=${startDate}&EndDate=${endDate}`
+  }
+
+  return url
+}
+
+const getTrips = async (): Promise<void> => {
+  const url = createUrl()
+  tripsStore.trips = await getData(url)
+  console.log(tripsStore.trips)
+  emit('close-filter')
+  emit('update-filter', tripsStore.trips)
 }
 </script>
 
@@ -219,6 +281,10 @@ const sendData = () => {
     opacity: 50%;
     cursor: pointer;
     margin: 84px auto 0 auto;
+  }
+
+  &__form {
+    overflow: hidden;
   }
 
   .p-multiselect {

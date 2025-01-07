@@ -16,7 +16,10 @@
         <TripInfoAssessment :rating="data.averageRating" />
 
         <div class="trip-info__map-container">
-          <TripInfoMap class="trip-info__map" />
+          <TripInfoMap
+            :city="data.city"
+            class="trip-info__map"
+          />
         </div>
       </div>
 
@@ -26,20 +29,19 @@
         <h3 class="trip-info__reviews-title">Отзывы</h3>
 
         <div class="trip-info__rating-container">
-          <p class="trip-info__rating">4.7</p>
+          <p class="trip-info__rating">{{ rating }}</p>
           <Rating
             v-model="rating"
             readonly
           />
-          <p class="trip-info__amount">52 оценки</p>
+          <p class="trip-info__amount">{{ data.reviews.length }}</p>
         </div>
 
 
         <Swiper
-          :height="300"
+          :height="200"
           :slidesPerView="'auto'"
           :spaceBetween="20"
-          :loop="true"
           :centeredSlides="true"
         >
           <SwiperSlide
@@ -95,7 +97,25 @@ const props = defineProps<{
   data: ITripsList
 }>()
 
-const rating = ref<number>(3)
+const rating = ref<number>(0)
+
+const getAverageRating = (): void => {
+  let averageRating: number = 0
+  for (let review of props.data.reviews) {
+    averageRating += review.rating
+  }
+
+  if (averageRating === 0) {
+    rating.value = averageRating
+  } else {
+    rating.value = averageRating / props.data.reviews.length
+  }
+
+}
+
+onMounted(() => {
+  getAverageRating()
+})
 </script>
 
 <style lang="scss">
@@ -162,6 +182,10 @@ const rating = ref<number>(3)
     padding: 40px 24px;
     background-color: var(--color-dark-primary);
     border-radius: 24px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   &__card-rating {
@@ -172,12 +196,18 @@ const rating = ref<number>(3)
     font-size: 17px;
     font-weight: 300;
     margin-bottom: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 
   &__person-info-container {
     display: grid;
     grid-template-columns: min-content 1fr;
     column-gap: 16px;
+    margin-top: auto
   }
 
   &__person-image,
@@ -219,7 +249,7 @@ const rating = ref<number>(3)
 
   .swiper-slide {
     width: 100%;
-    height: 300px;
+    height: 270px;
     max-width: 400px;
     display: flex;
     justify-content: center;

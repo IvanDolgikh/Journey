@@ -9,7 +9,8 @@ export interface ITripsList {
   imageUrl: string,
   averageRating: number,
   days: ITripDays[],
-  reviews: ITripReviews[]
+  reviews: ITripReviews[],
+  selected?: boolean;
 }
 
 export interface ITripDays {
