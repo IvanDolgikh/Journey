@@ -1,9 +1,9 @@
 <template>
   <section class="popular-trip">
     <div class="popular-trip__container">
-      <h2 class="popular-trip__title">Popular <span>trip</span></h2>
-      <p class="popular-trip__description">Discover top-rated journeys curated for travelers like you.
-        From city escapes to&nbsp;nature adventures.</p>
+      <h2 class="popular-trip__title">Популярные туры</h2>
+      <p class="popular-trip__description">Откройте для себя лучшие путешествия от&nbsp;прогулок по&nbsp;городу
+        до&nbsp;приключений на&nbsp;природе.</p>
 
       <Swiper
         :height="430"
@@ -18,7 +18,7 @@
         >
           <img
             class="popular-trip__card-image"
-            src="../public/images/tokyo-view.png"
+            :src="item.image"
             alt=""
           >
           <div class="popular-trip__card">
@@ -47,14 +47,16 @@
   setup
   lang="ts"
 >
-
+import tokyoImage from '../public/images/tokyo-view.png';
+import californiaImage from '../public/images/california-view.jpg';
+import nevadaImage from '../public/images/nevada-view.png';
 const dataSlider = ref([
-  { title: 'Trip to Tokyo', image: '../public/images/tokyo-view.png', description: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
-  { title: 'Trip to Tokyo', image: '../public/images/tokyo-view.png', description: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
-  { title: 'Trip to Tokyo', image: '../public/images/tokyo-view.png', description: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
-  { title: 'Trip to Tokyo', image: '../public/images/tokyo-view.png', description: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
-  { title: 'Trip to Tokyo', image: '../public/images/tokyo-view.png', description: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
-  { title: 'Trip to Tokyo', image: '../public/images/tokyo-view.png', description: 'A trip to Tokyo is an exciting journey into one of the most dynamic megacities in the world', tags: ['Adventure', 'Solo travel', 'Relaxaction'] }
+  { title: 'Поездка в Токио', image: tokyoImage, description: 'Поездка в Токио - это увлекательное путешествие в один из самых динамичных мегаполисов мира', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
+  { title: 'Поездка в Калифорнию', image: californiaImage, description: 'Поездка в Калифорнию — это увлекательное погружение в мир контрастов, где золотые пляжи соседствуют со снежными вершинами гор.', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
+  { title: 'Поездка в Неваду', image: nevadaImage, description: 'Поездка в Неваду — это погружение в мир контрастов, где сияющие огни Лас-Вегаса соседствуют с величественным безмолвием пустыни.', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
+  { title: 'Поездка в Токио', image: tokyoImage, description: 'Поездка в Токио - это увлекательное путешествие в один из самых динамичных мегаполисов мира', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
+  { title: 'Поездка в Калифорнию', image: californiaImage, description: 'Поездка в Калифорнию — это увлекательное погружение в мир контрастов, где золотые пляжи соседствуют со снежными вершинами гор.', tags: ['Adventure', 'Solo travel', 'Relaxaction'] },
+  { title: 'Поездка в Неваду', image: nevadaImage, description: 'Поездка в Неваду — это погружение в мир контрастов, где сияющие огни Лас-Вегаса соседствуют с величественным безмолвием пустыни.', tags: ['Adventure', 'Solo travel', 'Relaxaction'] }
 ])
 </script>
 

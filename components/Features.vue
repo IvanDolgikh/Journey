@@ -13,18 +13,18 @@
           alt="Long road."
         >
         <div class="features__description-container">
-          <p>All thing in&nbsp;one place</p>
-          <span>Get the best deals on complete trip package</span>
+          <p>Все в одном месте</p>
+          <span>Получите лучшие предложения на полный туристический пакет.</span>
         </div>
 
-        <div class="features__text">
+        <!-- <div class="features__text">
           <p>WanderLust offers you more than just a&nbsp;travel search engine.
             Our AI-driven platform analyzes your preferences to&nbsp;provide tailored trip suggestions, from
             destinations to&nbsp;activities. </p>
           <p>Save time with curated recommendations, enjoy personalized itineraries, and discover hidden gems you might
             never have found on&nbsp;your own.</p>
           <p>Whether you&rsquo;re seeking adventure, relaxation, or&nbsp;cultural exploration</p>
-        </div>
+        </div> -->
       </div>
 
       <div class="features__col-2">
@@ -35,8 +35,8 @@
         >
 
         <div class="features__description-container">
-          <p>Optimal Route Planning</p>
-          <span>Our AI&nbsp;selects itineraries tailored to&nbsp;your interests and travel style.</span>
+          <p>Оптимальное планирование маршрутов</p>
+          <span>Наш ИИ подбирает маршруты, соответствующие вашим интересам и стилю путешествия.</span>
         </div>
       </div>
 
@@ -48,8 +48,8 @@
         >
 
         <div class="features__description-container">
-          <p>Personalized Your tours </p>
-          <span>Shape your journey by&nbsp;freely adding, editing, or&nbsp;deleting activities</span>
+          <p>Персонализируйте свои туры</p>
+          <span>Настройте своё путешествие, свободно добавляя, редактируя или удаляя активности.</span>
         </div>
       </div>
 
@@ -71,8 +71,8 @@
   &__container {
     display: grid;
     grid-template-rows: min-content auto;
-    grid-template-columns: auto min-content min-content;
-    column-gap: 18px;
+    grid-template-columns: repeat(3, auto);
+    column-gap: 40px;
     max-width: 1440px;
     margin: 0 auto 100px auto;
     padding: 0 96px;
@@ -96,16 +96,11 @@
     }
   }
 
-  &__col-1 {
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: min-content 1fr;
-    grid-auto-rows: minmax(min-content, 1fr);
-  }
-
+  &__col-1,
   &__col-2,
   &__col-3 {
     grid-row: 2;
+    width: min-content;
   }
 
   &__image {

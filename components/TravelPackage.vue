@@ -1,7 +1,8 @@
 <template>
   <section class="travel-package">
     <div class="travel-package__container">
-      <h2 class="travel-package__title"><span>5</span> Steps to Your perfect <span>Travel</span> package</h2>
+      <h2 class="travel-package__title"><span>5</span> Шагов
+        к лучшему путешествию</h2>
 
       <ul class="travel-package__list">
         <li class="travel-package__item">
@@ -9,7 +10,7 @@
             src="../public/icons/planet.svg"
             alt=""
           >
-          <p>Country</p>
+          <p>Страна</p>
         </li>
 
         <li class="travel-package__item">
@@ -17,7 +18,7 @@
             src="../public/icons/dollar-sign.svg"
             alt=""
           >
-          <p>Budget</p>
+          <p>Бюджет</p>
         </li>
 
         <li class="travel-package__item">
@@ -25,7 +26,7 @@
             src="../public/icons/lol.svg"
             alt=""
           >
-          <p>Travel style</p>
+          <p>Стиль путешествия</p>
         </li>
 
         <li class="travel-package__item">
@@ -33,7 +34,7 @@
             src="../public/icons/calendar.svg"
             alt=""
           >
-          <p>Travel data</p>
+          <p>Даты</p>
         </li>
       </ul>
 
@@ -41,7 +42,7 @@
         class="travel-package__button-create"
         to="/create-trip"
       >
-        <span>Create new trip</span>
+        <span>Подобрать тур</span>
         <img
           src="../public/icons/arrow-up-right.svg"
           alt=""
@@ -54,7 +55,8 @@
           alt=""
         >
 
-        <p>242 result based on needs</p>
+        <p>242 результата
+          основанных на ваших потребностях</p>
 
         <nuxt-link to="">
           <img

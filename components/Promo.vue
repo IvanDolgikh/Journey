@@ -2,17 +2,16 @@
   <section class="promo">
     <div class="promo__container">
       <h1 class="visually-hidden">WanderLust: Your AI Travel Companion</h1>
-      <p class="promo__row-1">Perfect <span>Travel</span></p>
-      <p class="promo__row-2">For <span>You</span></p>
-      <p class="promo__row-3">with <span>AI</span> Technology</p>
-      <p class="promo__row-4">Create your personalized travel experience.</p>
+      <p class="promo__row-1"><span>Идеальное</span> путешествие для <span>вас</span></p>
+      <p class="promo__row-2">Вместе с <span>И</span>скусственным <span>И</span>нтелектом</p>
+      <p class="promo__row-3">Создайте своё уникальное путешествие</p>
 
       <div class="promo__buttons-container">
         <NuxtLink
           to="/create-trip"
           class="promo__button-create-trip"
         >
-          <span>Create new trip</span>
+          <span>Подобрать тур</span>
           <svg
             class="promo__button-icon"
             width="39"
@@ -52,41 +51,36 @@
 
   &__container {
     margin: 0 auto 84px auto;
-    padding: 16% 182px 0 182px;
+    padding: 16% 90px 0 90px;
     height: 100vh;
     max-width: 1440px;
   }
 
+  &__row-1 {
+    margin-bottom: 12px;
+  }
+
+  &__row-2 {
+    margin-bottom: 120px;
+  }
+
   &__row-1,
-  &__row-2,
-  &__row-3 {
-    font-size: 72px;
+  &__row-2 {
+    font-size: 60px;
     font-weight: 600;
     color: var(--color-light-primary);
+    text-align: center;
 
     span {
       color: var(--color-accent);
     }
   }
 
-  &__row-2 {
-    margin-left: 26%;
-  }
-
   &__row-3 {
-    margin-left: 38%;
-    margin-bottom: 18px;
-
-    span {
-      color: rgba(248, 212, 254, 1);
-    }
-  }
-
-  &__row-4 {
     text-align: center;
-    font-size: 22px;
-    color: var(--color-light-secondary);
-    margin-bottom: 42px;
+    color: var(--color-light-primary);
+    margin-bottom: 32px;
+    font-size: 25px;
   }
 
   &__buttons-container {

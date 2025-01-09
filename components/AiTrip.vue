@@ -1,22 +1,23 @@
 <template>
   <section class="ai-trip">
     <div class="ai-trip__container">
-      <h2 class="ai-trip__title">Your <span>AI</span>-Powered Trip</h2>
+      <h2 class="ai-trip__title">Путешествуй
+        с умным помощником</h2>
 
       <div class="ai-trip__description">
         <img
           src="../public/images/woman-yoga.png"
           alt="Женщина, занимающаяся йогой"
         >
-        <span>The most optimal</span>
-        <p>Discover the best travel options without the hassle. Our AI&nbsp;analyzes your preferences and finds the
-          most suitable tours, saving you time and ensuring every trip is&nbsp;just right for you.</p>
+        <span>Самое оптимальное</span>
+        <p>Откройте лучшие варианты путешествий без лишних забот. Наш ИИ&nbsp;подбирает туры под ваши предпочтения,
+          экономя время и&nbsp;делая каждую поездку идеальной.</p>
       </div>
 
       <div class="ai-trip__description">
-        <span>Get Inspired</span>
-        <p>Unlock new travel ideas and destinations you&rsquo;ve never considered. Our personalized recommendations
-          are designed to&nbsp;inspire your next adventure, offering exciting and unique experiences around the globe.
+        <span>Вдохновляйтесь</span>
+        <p>Откройте новые идеи для путешествий и&nbsp;направления, о&nbsp;которых вы&nbsp;не&nbsp;задумывались. Наши
+          рекомендации вдохновят вас на&nbsp;уникальные приключения по&nbsp;всему миру.
         </p>
 
         <div class="ai-trip__create">
@@ -28,9 +29,9 @@
             src="../public/images/decorative-pink-circle.svg"
             alt=""
           >
-          <p>WanderLust service will help all this</p>
-          <nuxt-link to="">
-            Create new trip
+          <p>WanderLust поможет во всем этом</p>
+          <nuxt-link to="/create-trip">
+            Подобрать тур
             <span class="pi pi-arrow-up-right"></span>
           </nuxt-link>
         </div>
