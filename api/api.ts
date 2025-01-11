@@ -1,4 +1,4 @@
-const baseUrl: string = 'http://213.171.24.15:8080/api'
+const baseUrl: string = 'https://journey-pet-app.duckdns.org:8080/api'
 
 const sendData = async <T>(url: string, data: T): Promise<T> => {
   try {
