@@ -1,4 +1,4 @@
-const baseUrl: string = 'http://213.171.24.15:8080/api'
+const baseUrl: string = 'https://213.171.24.15:8080/api'
 
 const sendData = async <T>(url: string, data: T): Promise<T> => {
   try {
