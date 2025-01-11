@@ -6,7 +6,10 @@
       <p class="promo__row-2">Вместе с <span>И</span>скусственным <span>И</span>нтелектом</p>
       <p class="promo__row-3">Создайте своё уникальное путешествие</p>
 
-      <div class="promo__buttons-container">
+      <div
+        class="promo__buttons-container"
+        v-if="authStore.isAuthUser || isAuthUser"
+      >
         <NuxtLink
           to="/create-trip"
           class="promo__button-create-trip"
@@ -38,6 +41,14 @@
   setup
   lang="ts"
 >
+
+const authStore = useAuthStore()
+
+const isAuthUser = computed(() => {
+  if (localStorage.getItem('isAuthUser')) {
+    return localStorage.getItem('isAuthUser') === 'true' ? true : false
+  }
+})
 </script>
 
 <style
