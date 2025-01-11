@@ -8,9 +8,9 @@
     }"
   >
     <div class="trip-promo__container">
-      <nuxt-link
+      <button
         class="trip-promo__link-back"
-        to="/create-trip"
+        @click="$router.go(-1)"
       >
         <svg
           class="trip-promo__link-icon"
@@ -27,7 +27,7 @@
           />
         </svg>
         <span>Назад</span>
-      </nuxt-link>
+      </button>
 
       <div class="trip-promo__title-container">
         <h2 class="trip-promo__title">{{ data.city }}</h2>
