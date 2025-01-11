@@ -142,6 +142,8 @@ const isOpenCommentForm = ref<boolean>(false)
   }
 
   &__link-back {
+    background-color: transparent;
+    border: none;
     display: flex;
     column-gap: 10px;
     align-items: center;
