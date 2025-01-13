@@ -52,7 +52,7 @@
             mediumLabel="Слабый пароль"
             strongLabel="Надежный пароль"
             toggleMask
-            placeholder="Введите пароль"
+            placeholder="1Q2w3e4r5t!"
           />
         </label>
 
